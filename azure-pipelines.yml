@@ -6,8 +6,23 @@ trigger:
 
 pool: rana-pool
 
+parameters:
+  - name: tfsec
+    displayName: tfsec chalana jhai ya nhi?
+    type: boolean
+    default: false
+
+  - name: tflint 
+    displayName: tflint chalana hai ya nhi?
+    type: boolean
+    default: false
+
+  
+
 stages:
   - stage: tfsec
+    condition: ${{ parameters.tfsec }}
+    dependsOn: []
     jobs:
       - job: tfsec
         displayName: tfsec
@@ -17,7 +32,9 @@ stages:
               targetType: 'inline'
               script: 'tfsec'
 
-  - stage: tflinnt
+  - stage: tflint
+    condition: ${{ parameters.tflint }}
+    dependsOn: []
     jobs:
       - job: tflint
         steps:
@@ -42,6 +59,9 @@ stages:
               backendAzureRmKey: 'terraform.tfstate'
 
   - stage: plan 
+    dependsOn: 
+    - tfsec
+    - tflint
     jobs:
       - job: plan
         displayName: plan
@@ -62,6 +82,8 @@ stages:
               environmentServiceNameAzureRM: 'ranaservice'
 
   - stage: approval
+    dependsOn: 
+    - plan
     pool: server
     jobs:
       - job: approval
@@ -73,6 +95,8 @@ stages:
 
 
   - stage: apply
+    dependsOn: approval
+
     jobs:
       - job: apply
         displayName: apply
