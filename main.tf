@@ -19,4 +19,8 @@ provider "azurerm" {
 resource "azurerm_resource_group" "rg" {
     name = "rishi-rg" 
     location = "central india"
+
+    tags = {
+        owner = "rishi"
+    }
 }
