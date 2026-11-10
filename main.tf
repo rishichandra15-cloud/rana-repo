@@ -24,3 +24,12 @@ resource "azurerm_resource_group" "rg" {
         owner = "rishi"
     }
 }
+
+resource "azurerm_resource_group" "rg" {
+    name = "rishi-rg455" 
+    location = "central india"
+
+    tags = {
+        owner = "rishi"
+    }
+}
