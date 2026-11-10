@@ -25,7 +25,7 @@ resource "azurerm_resource_group" "rg" {
     }
 }
 
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg455" {
     name = "rishi-rg455" 
     location = "central india"
 
