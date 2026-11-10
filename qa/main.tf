@@ -17,8 +17,8 @@ provider "azurerm" {
 }
 
 
-resource "azurerm_resource_group" "rg455" {
-    name = "rishi-rg455" 
+resource "azurerm_resource_group" "rg458" {
+    name = "rishi-rg458" 
     location = "central india"
 
     tags = {
