@@ -1,0 +1,120 @@
+trigger:
+ branches:
+   include:
+     - main
+     - feature/*
+
+pool: rana-pool
+
+parameters:
+  - name: tfsec
+    displayName: tfsec chalana jhai ya nhi?
+    type: boolean
+    default: false
+
+  - name: tflint 
+    displayName: tflint chalana hai ya nhi?
+    type: boolean
+    default: false
+
+  
+
+stages:
+  - stage: tfsec
+    condition: ${{ parameters.tfsec }}
+    dependsOn: []
+    jobs:
+      - job: tfsec
+        displayName: tfsec
+        steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: 'tfsec'
+
+  - stage: tflint
+    condition: ${{ parameters.tflint }}
+    dependsOn: []
+    jobs:
+      - job: tflint
+        steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: 'tflint --recursive --force'
+
+
+  - stage: init
+    dependsOn:
+    - tfsec 
+    - tflint
+    jobs:
+      - job: 
+        displayName: init
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'ranaservice'
+              backendAzureRmStorageAccountName: 'storagepipeline11'
+              backendAzureRmContainerName: 'mycontainer'
+              backendAzureRmKey: 'qa.tfstate'
+
+  - stage: plan 
+    dependsOn: 
+    - init
+
+    jobs:
+      - job: plan
+        displayName: plan
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'ranaservice'
+              backendAzureRmStorageAccountName: 'storagepipeline11'
+              backendAzureRmContainerName: 'mycontainer'
+              backendAzureRmKey: 'qa.tfstate'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'ranaservice'
+
+  - stage: approval
+    dependsOn: 
+    - plan
+    pool: server
+    jobs:
+      - job: approval
+        displayName: approval
+        steps:
+          - task: ManualValidation@1
+            inputs:
+              notifyUsers: 'rishi@1234'
+
+
+  - stage: apply
+    dependsOn: approval
+
+    jobs:
+      - job: apply
+        displayName: apply
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'ranaservice'
+              backendAzureRmStorageAccountName: 'storagepipeline11'
+              backendAzureRmContainerName: 'mycontainer'
+              backendAzureRmKey: 'qa.tfstate'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              environmentServiceNameAzureRM: 'ranaservice'

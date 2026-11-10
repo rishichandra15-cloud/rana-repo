@@ -8,6 +8,10 @@ terraform {
     }
 
     backend "azurerm" {
+        resource_group_name = "admin_rg"
+        container_name = "mycontainer"
+        storage_storage_account_name = "storagepipeline11"
+        key = "terraform.tfstate"
       
     }
 }
@@ -16,17 +20,9 @@ provider "azurerm" {
     features {}
 }
 
-resource "azurerm_resource_group" "rg" {
-    name = "rishi-rg" 
-    location = "central india"
 
-    tags = {
-        owner = "rishi"
-    }
-}
-
-resource "azurerm_resource_group" "rg455" {
-    name = "rishi-rg455" 
+resource "azurerm_resource_group" "rg468" {
+    name = "rishi-rg468" 
     location = "central india"
 
     tags = {
