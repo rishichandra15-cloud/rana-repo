@@ -45,6 +45,9 @@ stages:
 
 
   - stage: init
+    dependsOn:
+    - tfsec 
+    - tflint
     jobs:
       - job: 
         displayName: init
@@ -60,8 +63,8 @@ stages:
 
   - stage: plan 
     dependsOn: 
-    - tfsec
-    - tflint
+    - init
+
     jobs:
       - job: plan
         displayName: plan
