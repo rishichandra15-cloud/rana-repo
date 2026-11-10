@@ -59,7 +59,7 @@ stages:
               backendServiceArm: 'ranaservice'
               backendAzureRmStorageAccountName: 'storagepipeline11'
               backendAzureRmContainerName: 'mycontainer'
-              backendAzureRmKey: 'terraform.tfstate'
+              backendAzureRmKey: 'qa.tfstate'
 
   - stage: plan 
     dependsOn: 
@@ -76,7 +76,7 @@ stages:
               backendServiceArm: 'ranaservice'
               backendAzureRmStorageAccountName: 'storagepipeline11'
               backendAzureRmContainerName: 'mycontainer'
-              backendAzureRmKey: 'terraform.tfstate'
+              backendAzureRmKey: 'qa.tfstate'
 
           - task: TerraformTask@5
             inputs:
@@ -111,7 +111,7 @@ stages:
               backendServiceArm: 'ranaservice'
               backendAzureRmStorageAccountName: 'storagepipeline11'
               backendAzureRmContainerName: 'mycontainer'
-              backendAzureRmKey: 'terraform.tfstate'
+              backendAzureRmKey: 'qa.tfstate'
 
           - task: TerraformTask@5
             inputs:
